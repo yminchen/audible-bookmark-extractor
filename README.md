@@ -1,5 +1,12 @@
 # README.md
 
+## My own notes
+
+Here are the steps to export the notes in your own way:
+- install the dependencies (make sure to install `ffmpeg-python` in order to download the audiobook successfully)
+- run `python main.py`, and do the following order download_books -> convert_audiobook -> get_bookmarks (not sure if the second step is necessary)
+
+
 ## Overview
 
 This tool allows you to download your Audible audiobooks and transcribe their bookmarks into text, which can then be exported. 

@@ -139,6 +139,7 @@ class AudibleAPI:
                 asin = book["item"]["asin"]
                 raw_title = book["item"]["title"]
                 title = raw_title.lower().replace(" ", "_")
+                title = title.lower().replace("&", "_")
                 all_books[asin] = title
 
                 # Attempt to download book
@@ -251,6 +252,7 @@ class AudibleAPI:
             return
 
         title = _title.lower().replace(" ", "_")
+        title = title.lower().replace("&", "_")
 
         bookmarks_url = f"https://cde-ta-g7g.amazon.com/FionaCDEServiceEngine/sidecar?type=AUDI&key={asin}"
         print(f"Getting bookmarks for {_title}")
@@ -283,6 +285,8 @@ class AudibleAPI:
             if not path_exists:
                 os.makedirs(clips_dir_path)
 
+            my_notes_dict = {}
+
             for audio_clip in li_clips:
                 # Get start position to slice
                 raw_start_pos = int(audio_clip["startPosition"])
@@ -292,6 +296,8 @@ class AudibleAPI:
                     notes_dict[raw_start_pos] = audio_clip.get("text")
                     print(
                         f"CLIP: {notes_dict[raw_start_pos]}  {raw_start_pos}")
+
+                    my_notes_dict[raw_start_pos] = notes_dict[raw_start_pos]
 
                 if audio_clip.get("type", None) in ["audible.clip", "audible.bookmark"]:
                     start_pos = raw_start_pos - START_POSITION_OFFSET
@@ -308,9 +314,15 @@ class AudibleAPI:
 
                     # Save the clip
                     clip_path = os.path.join(clips_dir_path, f"{file_name}.flac")
-                    clip.export(
-                        clip_path, format="flac")
+                    # clip.export(
+                    #     clip_path, format="flac")
                     file_counter += 1
+
+            # Combine all notes into one and export it to a txt file.
+            sorted_dict = dict(sorted(my_notes_dict.items()))
+            combined_notes = "\n\n=-=-=-=\n\n".join(note for note in sorted_dict.values())
+            with open("exported_notes.txt", "w") as file: file.write(combined_notes)
+
 
     async def cmd_convert_audiobook(self):
         # FFMPEG needs to be installed for this step! see readme for more details
@@ -324,6 +336,7 @@ class AudibleAPI:
                 return
 
             title = _title.replace(" ", "_").lower()
+            title = title.replace("&", "_").lower()
             # Strips Audible DRM  from audiobook
             activation_bytes = self.get_activation_bytes()
             title_dir_path = os.path.join(artifacts_root_directory, "audiobooks", title)
@@ -352,6 +365,7 @@ class AudibleAPI:
             _authors = book.get("title", {}).get("authors", {})
             allAuthors = ", ".join(item['name'] for item in _authors)
             title = _title.lower().replace(" ", "_")
+            title = title.lower().replace("&", "_")
             title_dir_path = os.path.join(artifacts_root_directory, "audiobooks", title)
             clips_dir_path = os.path.join(title_dir_path, "clips")
             directory = os.fsencode(clips_dir_path)

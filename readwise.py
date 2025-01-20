@@ -30,6 +30,7 @@ class Readwise:
       print("Posting to Readwise…")
       title = book.get("title", {}).get("title", 'untitled')
       title = title.lower().replace(" ", "_")
+      title = title.lower().replace("&", "_")
       
       with open(f"{artifacts_root_directory}/audiobooks/{title}/trancribed_clips/contents.json", "r") as f:
         highlights = json.load(f)
