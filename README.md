@@ -4,7 +4,10 @@
 
 Here are the steps to export the notes in your own way:
 - install the dependencies (make sure to install `ffmpeg-python` in order to download the audiobook successfully)
-- run `python main.py`, and do the following order download_books -> convert_audiobook -> get_bookmarks (not sure if the second step is necessary)
+   - reminder -- if you have installed it in your venv, source it. E.g. `source ~/venv_audible/bin/activate`  
+- run `python main.py`, and do the following order `download_books` -> `convert_audiobook` -> `get_bookmarks` 
+   - if you are not sure about the commands, you can type `help` and you will see the list of options with explanation.
+   - ignore the readwise_authenticate warning, since you are not using Readwise.
 
 
 ## Overview
