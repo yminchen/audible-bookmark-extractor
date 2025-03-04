@@ -299,6 +299,9 @@ class AudibleAPI:
 
                     my_notes_dict[raw_start_pos] = notes_dict[raw_start_pos]
 
+                    # if audio_clip.get("text")[0] == "\"":
+                    #     import pdb;pdb.set_trace()
+
                 if audio_clip.get("type", None) in ["audible.clip", "audible.bookmark"]:
                     start_pos = raw_start_pos - START_POSITION_OFFSET
                     end_pos = int(audio_clip.get(
